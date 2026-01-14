@@ -1,1 +1,24 @@
+# Arquivos de Log e DB
+*.log
+*.log.*
+*.db
+*.db-shm
+*.db-wal
+.ha_run.lock
+
+# Pastas de conteúdo
+.cloud
+.storage
+deps
+
+# Arquivos e pastas específicas
+core
+image
 secrets.yaml
+
+# Gitkeep
+!.gitkeep
+
+# Blueprints pré-instalados
+blueprints/*/homeassistant
+
