@@ -70,3 +70,25 @@
     data:
       mensagem_de_voz: 'Lembrete: Hora de tomar os remédios.'
   mode: single
+- id: '1775377802029'
+  alias: Atualizar Modo de Funcionamento de Luzes
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - select.abajur_local_cena
+    id: alteracao_cena
+  conditions: []
+  actions:
+  - if:
+    - condition: trigger
+      id:
+      - alteracao_cena
+    then:
+    - action: light.turn_on
+      metadata: {}
+      data:
+        effect: Scene
+      target:
+        entity_id: light.abajur_local
+  mode: single

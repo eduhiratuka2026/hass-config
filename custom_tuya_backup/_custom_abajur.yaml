@@ -1,0 +1,64 @@
+name: Abajur
+products:
+  - id: ebc204ebab34c23b3cbyij
+entities:
+  - entity: light
+    dps:
+      - id: 20
+        name: Luz
+        type: boolean
+        name: switch
+      - id: 21
+        name: color_mode
+        type: string
+        mapping:
+          - dps_val: white
+            value: color_temp
+          - dps_val: scene
+            value: Scene
+      - id: 22
+        name: brightness
+        type: integer
+        range:
+          min: 10
+          max: 1000
+      - id: 23
+        name: color_temp
+        type: integer
+        range:
+          min: 0
+          max: 1000
+        mapping:
+          - target_range:
+              min: 2700
+              max: 6500
+      - id: 25
+        name: scene_data
+        type: string
+        optional: true
+        mapping:
+          - dps_val: "000e0d0000000000000000c80000"
+            value: "Boa Noite"
+          - dps_val: "010e0d0000000000000003e801f4"
+            value: "Leitura"
+          - dps_val: "020e0d0000000000000003e803e8"
+            value: "Trabalho"
+          - dps_val: "030e0d0000000000000001f401f4"
+            value: "Lazer"
+  - entity: select
+    translation_key: scene
+    category: config
+    dps:
+      - id: 25
+        type: string
+        name: option
+        optional: true
+        mapping:
+          - dps_val: "000e0d0000000000000000c80000"
+            value: "Boa Noite"
+          - dps_val: "010e0d0000000000000003e801f4"
+            value: "Leitura"
+          - dps_val: "020e0d0000000000000003e803e8"
+            value: "Trabalho"
+          - dps_val: "030e0d0000000000000001f401f4"
+            value: "Lazer"
