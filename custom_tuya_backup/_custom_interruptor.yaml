@@ -1,0 +1,45 @@
+name: Interruptor Inteligente de 1 Botão
+products:
+  - id: ebed642b85b85f62dfjuoo
+entities:
+  - entity: switch
+    name: Botão da Luz
+    dps:
+      - id: 1
+        type: boolean
+        name: switch
+  - entity: select
+    name: Estado de Reinicilização
+    category: config
+    dps:
+      - id: 14
+        type: string
+        name: option
+        mapping:
+          - dps_val: "off"
+            value: Desligado
+          - dps_val: "on"
+            value: Ligado
+          - dps_val: "memory"
+            value: Último Estado
+  - entity: select
+    name: Modo de Luz Indicadora
+    category: config
+    dps:
+      - id: 15
+        type: string
+        name: option
+        mapping:
+          - dps_val: relay
+            value: Indica o estado de Ligar/Desligar
+          - dps_val: pos
+            value: Indica o estado Invertido
+          - dps_val: none
+            value: Desligado
+  - entity: light
+    name: Luz de Fundo
+    category: config
+    dps:
+      - id: 16
+        name: switch
+        type: boolean

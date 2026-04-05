@@ -1,0 +1,2 @@
+template casa_abajur_status: !include ../custom_entities/casa_inteligente/abajur/status.yaml
+template casa_abajur: !include ../custom_entities/casa_inteligente/abajur/abajur.yaml

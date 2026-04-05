@@ -9,6 +9,7 @@
 # Pastas de conteúdo
 .cloud
 .storage
+.cache
 deps
 
 # Arquivos e pastas específicas

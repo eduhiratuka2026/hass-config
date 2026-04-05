@@ -1,0 +1,42 @@
+light:
+  - name: "Abajur"
+    unique_id: abajur
+    state: "{{ states('light.abajur_local') }}"
+    level: "{{ state_attr('light.abajur_local', 'brightness')|d(0,true)|int }}"
+
+    temperature: |
+      {% set kelvin = state_attr('light.abajur_local', 'color_temp_kelvin') %}
+      {{ (1000000 / kelvin) | round(0) if kelvin is number and kelvin > 0 else none }}
+    max_mireds: |
+      {% set min_kelvin = state_attr('light.abajur_local', 'min_color_temp_kelvin') %}
+      {% set min_mired = (1000000 / min_kelvin) | round(0) if min_kelvin is number and min_kelvin > 0 else none %}
+      {{ min_mired }}
+    min_mireds: |
+      {% set max_kelvin = state_attr('light.abajur_local', 'max_color_temp_kelvin') %}
+      {% set max_mired = (1000000 / max_kelvin) | round(0) if max_kelvin is number and max_kelvin > 0 else none %}
+      {{ max_mired }}
+
+    effect_list: "{{ state_attr('light.abajur_local', 'effect_list') }}"
+    effect: "{{ state_attr('light.abajur_local', 'effect') }}"
+    
+    turn_on:
+      action: light.turn_on
+      entity_id: light.abajur_local
+    turn_off:
+      action: light.turn_off
+      entity_id: light.abajur_local
+    set_level: 
+      action: light.turn_on
+      entity_id: light.abajur_local
+      data:
+        brightness: "{{ brightness }}"
+    set_temperature:
+      action: light.turn_on
+      entity_id: light.abajur_local
+      data:
+        color_temp: "{{ color_temp }}"
+    set_effect:
+      action: light.turn_on
+      entity_id: light.abajur_local
+      data:
+        effect: "{{ effect }}"
