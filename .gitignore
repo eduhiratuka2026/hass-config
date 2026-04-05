@@ -18,6 +18,7 @@ image
 custom_components
 www
 secrets.yaml
+home-assistant-backups.txt
 
 # Gitkeep
 !.gitkeep
