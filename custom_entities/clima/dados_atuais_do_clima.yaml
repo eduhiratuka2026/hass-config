@@ -1,0 +1,127 @@
+sensor:
+  - name: "Velocidade do Vento em Casa em Texto"
+    unique_id: velocidade_do_vento_em_casa_em_texto
+    icon: "mdi:weather-windy"
+    state: >-
+        {%- set spd = states('sensor.velocidade_do_vento_em_casa') | float %}
+        {%- if spd <= 5 -%} Calmo
+        {% elif spd <= 11 -%} Brisa Leve
+        {% elif spd <= 19 -%} Brisa Fraca
+        {% elif spd <= 28 -%} Brisa Moderada
+        {% elif spd <= 38 -%} Brisa Forte
+        {% elif spd <= 49 -%} Vento Fresco
+        {% elif spd <= 61 -%} Vento Forte
+        {% elif spd <= 74 -%} Ventania
+        {% elif spd <= 88 -%} Tempestade
+        {% elif spd <= 102 -%} Tempestade Violenta
+        {% else -%} Furacão
+        {% endif -%}
+    attributes:
+      cor: >-
+        {%- set spd = states('sensor.velocidade_do_vento_em_casa') | float %}
+        {%- if spd <= 5 -%} var(--green-color)
+        {% elif spd <= 11 -%} var(--green-color)
+        {% elif spd <= 19 -%} var(--orange-color)
+        {% elif spd <= 28 -%} var(--orange-color)
+        {% elif spd <= 38 -%} var(--orange-color)
+        {% elif spd <= 49 -%} var(--red-color)
+        {% elif spd <= 61 -%} var(--red-color)
+        {% elif spd <= 74 -%} var(--red-color)
+        {% elif spd <= 88 -%} var(--purple-color)
+        {% elif spd <= 102 -%}var(--purple-color)
+        {% else -%} var(--purple-color)
+        {% endif -%}
+
+  - name: "Umidade Relativa em Casa em Texto"
+    unique_id: umidade_relativa_em_casa_em_texto
+    icon: "mdi:water-percent"
+    state: >-
+        {%- set ur = states("sensor.umidade_relativa_em_casa") | int %}
+        {%- if ur <= 30 -%} Muito Baixa
+        {% elif ur <= 40 -%} Baixa
+        {% elif ur | int <= 60 -%} Ideal
+        {% elif ur | int <= 80 -%} Alta
+        {% else -%} Muito alta
+        {% endif -%}
+    attributes:
+      cor: >-
+        {%- set ur = states("sensor.umidade_relativa_em_casa") | int %}
+        {%- if ur <= 30 -%} var(--red-color)
+        {% elif ur <= 40 -%} var(--orange-color)
+        {% elif ur <= 60 -%} var(--green-color)
+        {% elif ur <= 80 -%} var(--orange-color)
+        {% else -%} var(--red-color)
+        {% endif -%}
+
+
+
+  - name: "Índice UV em Casa em Texto"
+    unique_id: indice_uv_em_casa_em_texto
+    icon: "mdi:sunglasses"
+    state: >-
+        {%- set uv = states("sensor.indice_uv_em_casa") | int %}
+        {%- if uv <= 2 -%} Baixo
+        {% elif uv <= 5 -%} Moderado
+        {% elif uv <= 7 -%} Alto
+        {% elif uv <= 10 -%} Muito alto
+        {% else -%} Extremo
+        {% endif -%}
+    attributes:
+      cor: >-
+        {%- set uv = states("sensor.indice_uv_em_casa") | int %}
+        {%- if uv <= 2 -%} var(--green-color)
+        {% elif uv <= 5 -%} var(--yellow-color)
+        {% elif uv <= 7 -%} var(--orange-color)
+        {% elif uv <= 10 -%} var(--red-color)
+        {% else -%} var(--purple-color)
+        {% endif -%}
+
+
+
+  - name: "Visibilidade em Casa em Texto"
+    unique_id: visibilidade_em_casa_em_texto
+    icon: "mdi:eye"
+    state: >-
+        {%- set vb = state_attr("weather.clima_em_casa", "visibility") %}
+        {%- if vb <= 1 -%} Muito Ruim
+        {% elif vb <= 2 -%} Ruim
+        {% elif vb <= 4 -%} Regular
+        {% elif vb <= 10 -%} Boa
+        {% else -%} Ótima
+        {% endif -%}
+    attributes:
+      cor: >-
+        {%- set vb = state_attr("weather.clima_em_casa", "visibility") %}
+        {%- if vb <= 1 -%} var(--red-color)
+        {% elif vb <= 2 -%} var(--purple-color)
+        {% elif vb <= 4 -%} var(--orange-color)
+        {% elif vb <= 10 -%} var(--light-green-color)
+        {% else -%} var(--green-color)
+        {% endif -%}
+
+
+
+  - name: "Ponto de Orvalho em Casa em Texto"
+    unique_id: ponto_de_orvalho_em_casa_em_texto
+    icon: "mdi:water"
+    state: >-
+        {%- set pto = states("sensor.ponto_de_orvalho_em_casa") | int %}
+        {%- if pto <= 10 -%} Muito Seco
+        {% elif pto <= 16 -%} Confortável
+        {% elif pto <= 18 -%} Confortável
+        {% elif pto <= 21 -%} Umidade Moderada
+        {% elif pto <= 24 -%} Úmido
+        {% else -%} Muito Úmido
+        {% endif -%}
+    attributes:
+      cor: >-
+        {%- set pto = states("sensor.ponto_de_orvalho_em_casa") | int %}
+        {%- if pto <= 10 -%} var(--light-green-color)
+        {% elif pto <= 16 -%} var(--green-color)
+        {% elif pto <= 18 -%} var(--green-color)
+        {% elif pto <= 21 -%} var(--orange-color)
+        {% elif pto <= 24 -%} var(--purple-color)
+        {% else -%} var(--red-color)
+        {% endif -%}
+
+

@@ -1,0 +1,15 @@
+triggers:
+  - trigger: event
+    event_type: custom_proximo_sobrevoo_da_iss
+
+sensor:
+  - name: "Próximo Sobrevoo da ISS"
+    unique_id: proximo_sobrevoo_da_iss
+    device_class: timestamp
+    icon: mdi:space-station
+    state: "{{ trigger.event.data.proximo_sobrevoo_da_iss }}"
+    attributes:
+      magnitude: "{{ trigger.event.data.magnitude }}"
+      classificacao: "{{ trigger.event.data.classificacao }}"
+    availability: |
+      {{ (trigger.event.data.proximo_sobrevoo_da_iss | default(None) | as_timestamp(None)) != None }}

@@ -1,0 +1,76 @@
+  - id: atualizacao_do_proximo_sobrevoo_da_iss
+    alias: "Atualização do Próximo Sobrevoo da ISS"
+    description: ''
+    triggers:
+      - alias: for o minuto 02 de qualquer hora
+        trigger: time_pattern
+        hours: '*'
+        minutes: '02'
+        seconds: '0'
+      - alias: event_template_reloaded é acionado
+        trigger: event
+        event_type: event_template_reloaded
+      - alias: Home Assistant é iniciado
+        trigger: homeassistant
+        event: start
+    conditions: []
+    actions:
+      - alias: Executar o REST Command Obter Próximos Sobrevoos da ISS
+        action: rest_command.obter_proximos_sobrevoos_da_iss
+        response_variable: action_response
+        data: {}
+        enabled: true
+      - variables:
+            passagens: |
+                {% set response = action_response if action_response is mapping else {} %}
+                {% set passes = response.get('content', {}).get('passes', []) %}
+                {% set ns = namespace(filtrado=[]) %}
+                {% for p in passes %}
+                    {% set ns.filtrado = ns.filtrado + [{'begin': p.begin, 'mag': p.mag}] %}
+                {% endfor %}
+                {{ ns.filtrado }}
+            passagem: |
+                {% set agora = now() %}
+                {% set ns = namespace(pass=none) %}
+                {% for pass in passagens %}
+                    {% set atual = strptime(pass['begin'], '%Y%m%d%H%M%S') | as_local %}
+                    {% if atual > agora %}
+                        {% set ns.pass = pass %}
+                        {% break %}
+                    {% endif %}
+                {% endfor %}
+                {{ ns.pass }}
+            quantidade: |
+                {{ passagens | length }}
+      - if:
+          - alias: se houver sobrevoos
+            condition: template
+            value_template: '{{ passagem is not none }}'
+        then:
+          - variables:
+                inicio: |
+                    {% set begin = strptime(passagem.begin, '%Y%m%d%H%M%S') | as_local %}
+                    {{ begin.isoformat() }}
+                classificacao: |
+                    {% if passagem.mag > -1.5 %}
+                        {{ 'Visualização Ruim' }}
+                    {% elif passagem.mag > -3.5 %}
+                        {{ 'Boa Visualização' }}
+                    {% else %}
+                        {{ 'Ótima Visualização' }}
+                    {% endif %}
+          - alias: dispara evento com dados do sobrevoo
+            event: custom_proximo_sobrevoo_da_iss
+            event_data:
+                proximo_sobrevoo_da_iss: '{{ inicio }}'
+                magnitude: '{{ passagem.mag }}'
+                classificacao: '{{ classificacao }}'
+                quantidade: '{{ quantidade }}'
+        else:
+          - alias: se não, dispara evento sem dados
+            event: custom_proximo_sobrevoo_da_iss
+            event_data:
+                proximo_sobrevoo_da_iss: '{{ none }}'
+                magnitude: '{{ none }}'
+                classificacao: '{{ none }}'
+                quantidade: '{{ quantidade }}'

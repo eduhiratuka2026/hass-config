@@ -9,11 +9,14 @@
 # Pastas de conteúdo
 .cloud
 .storage
+.cache
 deps
 
 # Arquivos e pastas específicas
 core
 image
+custom_components
+www
 secrets.yaml
 
 # Gitkeep

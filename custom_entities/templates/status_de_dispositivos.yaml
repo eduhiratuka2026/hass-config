@@ -1,0 +1,29 @@
+
+
+sensor:
+  - name: "S23 Ultra do Edu: Status"
+    unique_id: s23_ultra_do_edu_status
+    state: "{{ states('sensor.s23_ultra_do_edu_nivel_da_bateria') }}"
+    icon: "{{ state_attr('sensor.s23_ultra_do_edu_nivel_da_bateria', 'icon') }}"
+    device_class: battery
+    unit_of_measurement: "%"
+    attributes:
+      status: >-
+        {% if is_state('sensor.s23_ultra_do_edu_status_da_bateria', 'discharging') -%}
+          Em Uso
+        {% elif is_state('sensor.s23_ultra_do_edu_status_da_bateria', 'charging') -%}
+          Carregando
+          {%- if is_state('sensor.s23_ultra_do_edu_tipo_de_carregamento', 'ac') -%}
+            {{ " - Tomada" }}
+          {% elif is_state('sensor.s23_ultra_do_edu_tipo_de_carregamento', 'usb') -%}
+            {{ " - USB" }}
+          {% elif is_state('sensor.s23_ultra_do_edu_tipo_de_carregamento', 'wireless') -%}
+            {{ " - Wireless" }}
+          {% elif is_state('sensor.s23_ultra_do_edu_tipo_de_carregamento', 'dock') -%}
+            {{ " - Dock" }}
+          {% endif %}
+        {% elif is_state('sensor.s23_ultra_do_edu_status_da_bateria', 'full') -%}
+          Carga Completa
+        {% elif is_state('sensor.s23_ultra_do_edu_status_da_bateria', 'not_charging') -%}
+          Not Charging
+        {% endif %}

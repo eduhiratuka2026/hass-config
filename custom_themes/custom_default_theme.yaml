@@ -1,0 +1,9 @@
+Tema Padrão (Custom):
+      primary-color: coral
+      modes:
+        light:
+          secondary-text-color: olive
+          card-background-rgb: 255, 255, 255
+        dark:
+          secondary-text-color: slategray
+          card-background-rgb: 0, 0, 0

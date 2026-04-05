@@ -1,0 +1,3 @@
+template clima_froggy: !include ../custom_entities/clima/plano_de_fundo_do_froggy.yaml
+template clima_atuais: !include ../custom_entities/clima/dados_atuais_do_clima.yaml
+template clima_dias: !include ../custom_entities/clima/previsao_proximos_dias.yaml

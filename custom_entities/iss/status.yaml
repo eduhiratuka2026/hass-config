@@ -1,0 +1,13 @@
+sensor:
+  - name: "Próximo Sobrevoo da ISS em Texto"
+    unique_id: proximo_sobrevoo_da_iss_em_texto
+    icon: mdi:space-station
+    state: |
+        {% from 'format_date.jinja' import format_date %}
+        {% if states("sensor.proximo_sobrevoo_da_iss") != 'unavailable' %}
+          {{ format_date(states("sensor.proximo_sobrevoo_da_iss")) }} · 
+          {{ state_attr("sensor.proximo_sobrevoo_da_iss", "classificacao") }} · 
+          ({{ state_attr("sensor.proximo_sobrevoo_da_iss", "magnitude") }})
+        {% else %}
+          Sem sobrevoo próximo.
+        {% endif %}

@@ -1,0 +1,5 @@
+template iss: !include ../custom_entities/iss/proximo_sobrevoo_da_iss.yaml
+template iss_status: !include ../custom_entities/iss/status.yaml
+template iss_imagem: !include ../custom_entities/iss/imagem.yaml
+automation iss_atualiza: !include ../custom_entities/iss/atualizacao.yaml
+automation iss_lembrete: !include ../custom_entities/iss/lembrete.yaml

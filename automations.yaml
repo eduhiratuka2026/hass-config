@@ -1,0 +1,72 @@
+- id: '1773671844568'
+  alias: Atualização da Previsão dos Próximos Dias em Casa
+  description: ''
+  triggers:
+  - alias: for o minuto 05 de qualquer hora
+    trigger: time_pattern
+    hours: '*'
+    minutes: '5'
+    seconds: '0'
+  - trigger: event
+    event_type: event_template_reloaded
+    alias: event_template_reloaded é acionado
+  - trigger: homeassistant
+    event: start
+    alias: Home Assistant é iniciado
+  conditions: []
+  actions:
+  - action: weather.get_forecasts
+    metadata: {}
+    data:
+      type: daily
+    target:
+      entity_id: weather.clima_em_casa
+    response_variable: action_response
+  - variables:
+      previsao: '{{action_response[''weather.clima_em_casa''][''forecast''][0:6] }}'
+  - event: custom_previsao_proximos_dias
+    event_data:
+      forecast: '{{ previsao }}'
+  mode: single
+- id: '1773684294791'
+  alias: Atualização do Plano de Fundo do Froggy em Casa
+  description: ''
+  triggers:
+  - alias: for o minuto 03 de qualquer hora
+    trigger: time_pattern
+    hours: '*'
+    minutes: '3'
+    seconds: '0'
+  - trigger: event
+    event_type: event_template_reloaded
+    alias: event_template_reloaded é acionado
+  - trigger: homeassistant
+    event: start
+    alias: Home Assistant é iniciado
+  conditions: []
+  actions:
+  - event: custom_froggy
+    event_data: {}
+    alias: dispara o evento 'custom_froggy'
+  mode: single
+- id: '1773684661683'
+  alias: Lembrete do Horário da Medicação
+  description: ''
+  triggers:
+  - trigger: time_pattern
+    hours: '9'
+    minutes: '0'
+    seconds: '0'
+    alias: for exatamente 09:00:00
+  - trigger: time_pattern
+    hours: '21'
+    minutes: '0'
+    seconds: '0'
+    alias: for exatamente 21:00:00
+  conditions: []
+  actions:
+  - action: script.s23_ultra_do_edu_enviar_tts
+    metadata: {}
+    data:
+      mensagem_de_voz: 'Lembrete: Hora de tomar os remédios.'
+  mode: single
