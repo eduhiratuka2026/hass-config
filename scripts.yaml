@@ -1,0 +1,53 @@
+s23_ultra_do_edu_encontrar_dispositivo:
+  sequence:
+  - action: notify.mobile_app_s23_ultra_do_edu
+    data:
+      message: command_ringer_mode
+      data:
+        command: normal
+  - action: notify.mobile_app_s23_ultra_do_edu
+    metadata: {}
+    data:
+      message: Telefone tocando no volume máximo solicitado pelo Home Assistant
+      title: Encontre Meu Telefone do Home Assistant
+      data:
+        ttl: 0
+        priority: high
+        channel: alarm_stream
+  alias: 'S23 Ultra do Edu: Encontrar Dispositivo'
+  icon: mdi:cellphone-marker
+  description: 'Tocar o telefone S23 Ultra do Edu no volume máximo para que possa
+    ser encontrado facilmente.
+
+    '
+s23_ultra_do_edu_enviar_tts:
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ mensagem_de_voz is defined and mensagem_de_voz is string
+        and mensagem_de_voz|length > 0 }}'
+    then:
+    - alias: envie uma mensagem usando as variáveis
+      action: notify.mobile_app_s23_ultra_do_edu
+      metadata: {}
+      data:
+        data:
+          tts_text: '{{ mensagem_de_voz }}'
+          media_stream: alarm_stream_max
+          ttl: 0
+          priority: high
+        message: TTS
+  alias: 'S23 Ultra do Edu: Enviar TTS'
+  icon: mdi:cellphone-message
+  description: 'Envia uma mensagem de voz que será tocada no S23 Ultra do Edu
+
+    '
+  fields:
+    mensagem_de_voz:
+      selector:
+        text:
+      name: Mensagem de Voz
+      required: false
+    campo:
+      selector:
+        text:

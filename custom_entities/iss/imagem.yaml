@@ -1,0 +1,11 @@
+
+image:
+  - name: "Próximo Sobrevoo da ISS em Imagem"
+    unique_id: proximo_sobrevoo_da_iss_em_imagem
+    icon: mdi:space-station
+    url: |
+        {% if states("sensor.proximo_sobrevoo_da_iss") != 'unavailable' %}
+            http://192.168.15.150:8123/local/iss.png
+        {% else %}
+            http://192.168.15.150:8123/local/iss-none.png
+        {% endif %}

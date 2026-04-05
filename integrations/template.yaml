@@ -1,0 +1,1 @@
+template auto: !include_dir_list ../custom_entities/templates

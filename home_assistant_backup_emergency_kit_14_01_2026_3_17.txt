@@ -1,0 +1,16 @@
+Kit de emergência de backup do Home Assistant
+
+Este kit de emergência contém sua chave de criptografia de backup. Você precisa desta chave para poder restaurar seus backups do Home Assistant.
+
+Data: 14 de janeiro de 2026 às 03:17
+
+Instância:
+Casa
+
+URL:
+http://homeassistant.local:8123
+
+Chave de criptografia:
+1GE3-P3Q9-KBA6-IGM7-RGBR-39NH-EC59
+
+Para mais informações, visite https://www.home-assistant.io/more-info/backup-emergency-kit

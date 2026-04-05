@@ -1,0 +1,19 @@
+  - id: lembrete_do_proximo_sobrevoo_da_iss
+    alias: "Lembrete do Próximo Sobrevoo da ISS"
+    description: ''
+    triggers:
+      - alias: faltar 10 minutos para o próximo sobrevoo da ISS
+        trigger: time
+        at:
+            entity_id: sensor.proximo_sobrevoo_da_iss
+            offset: -00:10:00
+    conditions: []
+    actions:
+      - action: script.s23_ultra_do_edu_enviar_tts
+        metadata: {}
+        data:
+            mensagem_de_voz: |
+                Faltam 10 minutos para o próximo sobrevoo da ISS. Condições
+                são de {{   state_attr("sensor.proximo_sobrevoo_da_iss", "classificacao")
+                }}
+    mode: single

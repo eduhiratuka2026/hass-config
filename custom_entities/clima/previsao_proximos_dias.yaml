@@ -1,0 +1,31 @@
+triggers:
+  - trigger: event
+    event_type: custom_previsao_proximos_dias
+
+sensor:
+  - name: "Previsão para Hoje em Casa"
+    unique_id: previsao_para_hoje_em_casa
+    state: "{{ trigger.event.data.forecast[0]['condition'] }}"
+    icon: |
+      mdi:weather-{{ trigger.event.data.forecast[0]['condition'] }}
+    attributes:
+      data: >-
+        {% set dia = trigger.event.data.forecast[0]['datetime'] | as_datetime %}
+        {% set hoje = now() %}
+        {% set amanha = now() + timedelta(days=1) %}
+        {% set weekday = dia.weekday() %}
+        
+        {% if dia.date() == hoje.date() %} Hoje
+        {% elif dia.date() == amanha.date() %} Amanhã
+        {% elif weekday == 0 %} Seg.
+        {% elif weekday == 1 %} Ter.
+        {% elif weekday == 2 %} Qua.
+        {% elif weekday == 3 %} Qui.
+        {% elif weekday == 4 %} Sex.
+        {% elif weekday == 5 %} Sáb.
+        {% elif weekday == 6 %} Dom.
+        {% endif %}
+      minima: "{{ trigger.event.data.forecast[0]['templow'] }}"
+      maxima: "{{ trigger.event.data.forecast[0]['temperature'] }}"
+      chuva_mm: "{{ trigger.event.data.forecast[0]['precipitation'] }}"
+      chance_chuva:  "{{ trigger.event.data.forecast[0]['precipitation_probability'] }}"
