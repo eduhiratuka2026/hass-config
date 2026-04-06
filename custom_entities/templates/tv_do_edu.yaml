@@ -1,0 +1,17 @@
+triggers:
+      - trigger: state
+        entity_id: select.tv_do_edu_selecao
+
+select:
+  - name: "TV do Edu: Seleção"
+    unique_id: "tv_do_edu_selecao"
+    icon: mdi:palette-swatch-variant
+    optimistic: true
+    options: "{{ ['Volume', 'Fonte'] }}"
+    state: "{{ 'Fonte' if trigger.to_state.state == 'unknown' else trigger.to_state.state }}"
+    select_option:
+      - action: select.select_option
+        data:
+          option: "{{ option }}"
+        target:
+          entity_id: select.tv_do_edu_selecao

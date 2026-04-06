@@ -1,0 +1,306 @@
+{% macro datePhaseNameandValue(most) -%}
+
+  {%- set fazismost = phase(most) | from_json -%}
+  {%- set normalize = ((fazismost['phase'] * 30.5) | round(0)) + 1 -%}
+
+  {%- set current_phase = int(findCurrentDayPhase(most.year, most.month, most.day)) -%}
+  
+  {%- set p = '' -%}
+  {%- set d = '' -%}
+
+  {%- if current_phase == 0 -%}
+    {%- set p = 'New Moon' -%}
+    {%- set d = 'This is the first and invisible phase of the Moon, with the illuminated side of the Moon facing the Sun and the night side facing Earth. The New Moon is only directly visible during a solar eclipse.' -%}
+    {%- set normalize = 1 -%}
+
+  {%- elif current_phase == 1 -%}
+    {%- set p = 'Waxing Crescent' -%}
+    {%- set d = 'After the New Moon, the sunlit portion is increasing, but less than half. The crescent can first be sighted after sunset.' -%}
+    {%- if normalize >= 8 -%}
+      {%- set normalize = normalize - 1 -%}
+    {%- endif -%}
+
+  {%- elif current_phase == 2 -%}
+    {%- set p = 'First Quarter' -%}
+    {%- set d = 'A week after new moon comes first quarter, when the Moon is a quarter of the way around its orbit. It is also termed a Half Moon. A First Quarter Moon rises around noon and sets around midnight.' -%}
+    {%- set normalize = 8 -%}
+
+  {%- elif current_phase == 3 -%}
+    {%- set p = 'Waxing Gibbous' -%}
+    {%- set d = 'After the First Quarter, the sunlit portion is still increasing, the illumination is greater than 50 per cent, but less than 100 per cent, the Moon’s phase is said to be Gibbous.' -%}
+
+  {%- elif current_phase == 4 -%}
+    {%- set p = 'Full Moon' -%}
+    {%- set d = 'At 100% phase illumination, the day side of the Moon is directly pointed at the night side of the Earth and the Moon is full. A Full Moon rises around sunset and sets around sunrise and it looks bigger when it is near the horizon.' -%}
+    {%- set normalize = 16 -%}
+
+  {%- elif current_phase == 5 -%}
+    {%- set p = 'Waning Gibbous' -%}
+    {%- set d = 'After the Full Moon, the light continually decreases and shadows now begin to grow. This is the Waning Gibbous phase. You can see this phase at most of night and in the early morning.' -%}
+
+  {%- elif current_phase == 6 -%}
+    {%- set p = 'Last Quarter' -%}
+    {%- set d = 'The Moon enters the Last Quarter (or Third Quarter) of its orbit at nearly 23 days old. Only half of it appears to be illuminated. You can see this phase at late night and in the early morning (6 am).' -%}
+    {%- set normalize = 24 -%}
+
+  {%- elif current_phase == 7 -%}
+    {%- set p = 'Waning Crescent' -%}
+    {%- set d = 'Eventually the Moon appears to become a very thin crescent impossible to see in the Sun’s glare. As it rises shortly before sunrise, the Waning Crescent is the least observed lunar phase.' -%}
+    {%- if normalize <= 24 -%}
+      {%- set normalize = normalize + 1 -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {# ajustes de limite #}
+  {%- if normalize == 31 -%}
+    {%- set normalize = 1 -%}
+  {%- endif -%}
+  {%- if normalize == 0 -%}
+    {%- set normalize = 30 -%}
+  {%- endif -%}
+
+  {# zfill equivalente #}
+  {%- set pv = "%02d" % normalize -%}
+
+  {{ {
+    'strphase': p,
+    'strdescphase': d,
+    'valphase': pv
+  } | to_json }}
+
+{%- endmacro %}
+
+{% macro findCurrentDayPhase(year, month, day) -%}
+  {%- set o = strptime(year ~ '-' ~ month ~ '-' ~ day, '%Y-%m-%d') -%}
+  {%- set o = o | as_datetime | as_local -%}
+
+  {%- set r = o - timedelta(days=2) -%}
+  {%- set s = o + timedelta(days=2) -%}
+
+  {# usamos namespace pra simular "return" dentro do loop #}
+  {%- set ns = namespace(result=None) -%}
+  
+  {%- for i in range(4) -%}
+    {%- if ns.result is none -%}
+      {%- set a = phaseRange(r, s, i) -%}
+      {# {%- if a and (a[0].date() == o.date()) -%}
+        {%- set ns.result = 2 * i -%}
+      {%- endif -%} #}
+    {%- endif -%}
+  {%- endfor -%}
+  
+  {%- if ns.result is not none -%}
+  {%- else -%}
+
+    {%- set u = o -%}
+    {%- set d = u - timedelta(minutes=1) -%}
+
+    {%- set l = phase(u) | from_json -%}
+    {%- set m = phase(d) | from_json -%}
+    {%- set li = l["illuminated"] | float -%}
+    {%- set mi = m["illuminated"] | float -%}
+
+    {%- if li < mi -%}
+      {%- if 0 < li < 0.5 -%}
+        7
+      {%- elif 0.5 < li < 1 -%}
+        5
+      {%- endif -%}
+    {%- else -%}
+      {%- if 0.5 < li < 1 -%}
+        3
+      {%- elif 0 < li < 0.5 -%}
+        1
+      {%- endif -%}
+    {%- endif -%}
+    
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro torad(e) -%}
+  {{ (pi / 180) * e }}
+{%- endmacro %}
+
+{% macro dsin(e) -%}
+  {{ sin((pi / 180) * e) }}
+{%- endmacro %}
+
+{% macro dcos(e) -%}
+  {{ cos((pi / 180) * e) }}
+{%- endmacro %}
+
+{% macro tokm(e) -%}
+  {{ 149597870.7 * e }}
+{%- endmacro %}
+
+{% macro from_date(date) -%}
+  {{ (as_timestamp(date) / 86400.0) + 2440587.5 }}
+{%- endmacro %}
+
+{% macro to_date(jd) -%}
+  {{ ((jd - 2440587.5) * 86400.0) | timestamp_custom('%Y-%m-%d %H:%M:%S', true) }}
+{%- endmacro %}
+
+{% macro phase(e=None) -%}
+  {%- set e = e if e is not none else now() -%}
+
+  {# tempo normalizado #}
+  {%- set n = (as_timestamp(e) * 1000) * (1 / 315576e7) - 0.3 -%}
+
+  {# ângulos (em graus) #}
+  {%- set t = 297.8501921 + n * (445267.1114034 + n * (n * (1/545868 + n * (-1/113065e3)) - 0.0018819)) -%}
+  {%- set a = 357.5291092 + n * (35999.0502909 + n * (n * (1/2449e4) - 1536e-7)) -%}
+  {%- set o = 134.9633964 + n * (477198.8675055 + n * (0.0087414 + n * (1/69699 + n * (-1/14712e3)))) -%}
+
+  {# trigonometria em graus #}
+  {%- set r = sin(pi / 180 * t) -%}
+  {%- set i = sin(pi / 180 * a) -%}
+  {%- set s = sin(pi / 180 * o) -%}
+  {%- set u = cos(pi / 180 * t) -%}
+  {%- set d = cos(pi / 180 * a) -%}
+  {%- set l = cos(pi / 180 * o) -%}
+
+  {# termos intermediários #}
+  {%- set m = 2 * r * u -%}
+  {%- set h = 2 * u * u - 1 -%}
+  {%- set f = 2 * d * d - 1 -%}
+  {%- set c = 2 * l * l - 1 -%}
+
+  {%- set p = h * l + m * s -%}
+
+  {# ângulo da fase #}
+  {%- set g = 180 - t
+      - 6.289 * s
+      + 2.1 * i
+      - 1.274 * (m * l - h * s)
+      - 0.658 * m
+      - 0.214 * (2 * s * l)
+      - 0.11 * r -%}
+
+  {%- set illuminated = 0.5 * cos(pi / 180 * g) + 0.5 -%}
+
+  {# fase normalizada (0–1) #}
+  {%- set w = 0.5 - g / 360 -%}
+  {%- set w = w - (w | float | int) -%}  {# equivalente ao floor #}
+
+  {# distâncias #}
+  {%- set D = 385000.56
+      - 20905.355 * l
+      - 3699.111 * p
+      - 2955.968 * h
+      - 569.925 * c
+      + 108.743 * u -%}
+
+  {%- set v = 149597870.7 * (1.00014 - 0.01671 * d - 1.4e-4 * f) -%}
+
+  {# saída como dict #}
+  {% set result = {
+    "phase": w,
+    "illuminated": illuminated,
+    "age": 29.53058868 * w,
+    "distance": D,
+    "angular_diameter": 199158.1581 / D,
+    "sun_distance": v,
+    "sun_angular_diameter": 79747951.88 / v
+  } | tojson %}
+  {{ result }}
+{%- endmacro %}
+
+{% macro phaseRange(start, end, phase_type) %}
+  {% set start = start | as_local -%}
+  {%- set end = end | as_local -%}
+  
+  {%- if end < start -%}
+    {%- set tmp = start -%}
+    {%- set start = end -%}
+    {%- set end = tmp -%}
+  {%- endif -%}
+
+  {%- set n = start - timedelta(days=45) -%}
+  {%- set k = (12.3685 * (n.year + (n.month + 1) / 12.0 - 1900)) | int -%}
+  
+  {%- set o = truephase(k, phase_type) | as_datetime | as_local -%}
+
+  {%- set ns = namespace(k=k, o=o, result=[]) -%}
+  {%- for _ in range(50) -%} {# limite de segurança #}
+    {%- if ns.o < start -%}
+      {%- set ns.k = ns.k + 1 -%}
+      {%- set ns.o = truephase(ns.k, phase_type)  | as_datetime | as_local -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {# coleta resultados #}
+  {%- for _ in range(50) -%} {# limite de segurança #}
+    {%- if ns.o <= end -%}
+      {%- set ns.result = ns.result + [ns.o] -%}
+      {%- set ns.k = ns.k + 1 -%}
+      {%- set ns.o = truephase(ns.k, phase_type)  | as_datetime | as_local -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {{ ns.result }}
+{%- endmacro %}
+
+{% macro truephase(k, phase_type) -%}
+  {%- set SYNODIC_MONTH = 29.53058868 -%}
+
+  {%- set phase_type = phase_type % 4 -%}
+
+  {%- set k = k + 0.25 * phase_type -%}
+  {%- set t = k / 1236.85 -%}
+
+  {%- set a =
+    2415020.75933 +
+    SYNODIC_MONTH * k +
+    (0.0001178 - 0.000000155 * t) * t * t +
+    0.00033 * sin(pi/180 * (166.56 + (132.87 - 0.009173 * t) * t))
+  -%}
+
+  {%- set o = 359.2242 + 29.10535608 * k - (0.0000333 - 0.0000347 * t) * t * t -%}
+  {%- set r = 306.0253 + 385.81691806 * k + (0.0107306 + 0.00001236 * t) * t * t -%}
+  {%- set i = 21.2964 + 390.67050646 * k - (0.0016528 - 0.0000239 * t) * t * t -%}
+
+  {%- if phase_type == 0 or phase_type == 2 -%}
+    {%- set a = a + (
+      (0.1734 - 0.000393 * t) * sin(pi/180 * o) +
+      0.0021 * sin(pi/180 * (2*o)) -
+      0.4068 * sin(pi/180 * r) +
+      0.0161 * sin(pi/180 * (2*r)) -
+      0.0004 * sin(pi/180 * (3*r)) +
+      0.0104 * sin(pi/180 * (2*i)) -
+      0.0051 * sin(pi/180 * (o+r)) -
+      0.0074 * sin(pi/180 * (o-r)) +
+      0.0004 * sin(pi/180 * (2*i+o)) -
+      0.0004 * sin(pi/180 * (2*i-o)) -
+      0.0006 * sin(pi/180 * (2*i+r)) +
+      0.0010 * sin(pi/180 * (2*i-r)) +
+      0.0005 * sin(pi/180 * (o+2*r))
+    ) -%}
+
+  {%- elif phase_type == 1 or phase_type == 3 -%}
+    {%- set a = a + (
+      (0.1721 - 0.0004 * t) * sin(pi/180 * o) +
+      0.0021 * sin(pi/180 * (2*o)) -
+      0.6280 * sin(pi/180 * r) +
+      0.0089 * sin(pi/180 * (2*r)) -
+      0.0004 * sin(pi/180 * (3*r)) +
+      0.0079 * sin(pi/180 * (2*i)) -
+      0.0119 * sin(pi/180 * (o+r)) -
+      0.0047 * sin(pi/180 * (o-r)) +
+      0.0003 * sin(pi/180 * (2*i+o)) -
+      0.0004 * sin(pi/180 * (2*i-o)) -
+      0.0006 * sin(pi/180 * (2*i+r)) +
+      0.0021 * sin(pi/180 * (2*i-r)) +
+      0.0003 * sin(pi/180 * (o+2*r)) +
+      0.0004 * sin(pi/180 * (o-2*r)) -
+      0.0003 * sin(pi/180 * (2*o+r))
+    ) -%}
+
+    {%- set a = a + (
+      (1 if phase_type < 2 else -1) *
+      (0.0028 - 0.0004 * cos(pi/180 * o) + 0.0003 * cos(pi/180 * r))
+    ) -%}
+  {%- endif -%}
+  
+  {{ (a - 2440587.5) * 86400 }}
+{%- endmacro %}

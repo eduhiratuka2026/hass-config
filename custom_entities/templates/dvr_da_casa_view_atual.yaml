@@ -1,0 +1,16 @@
+triggers:
+      - trigger: state
+        entity_id: select.dvr_da_casa_view_atual
+
+select:
+  - name: "DVR da Casa: View Atual"
+    unique_id: "dvr_da_casa_view_atual"
+    optimistic: true
+    options: "{{ ['Casa', 'Chácara'] }}"
+    state: "{{ 'Casa' if trigger.to_state.state == 'unknown' else trigger.to_state.state }}"
+    select_option:
+      - action: select.select_option
+        data:
+          option: "{{ option }}"
+        target:
+          entity_id: select.dvr_da_casa_view_atual

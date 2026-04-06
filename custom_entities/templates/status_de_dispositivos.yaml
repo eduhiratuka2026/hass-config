@@ -27,3 +27,11 @@ sensor:
         {% elif is_state('sensor.s23_ultra_do_edu_status_da_bateria', 'not_charging') -%}
           Not Charging
         {% endif %}
+        
+  - name: "DVR da Casa: Status"
+    unique_id: dvr_da_casa_status
+    icon: mdi:cctv
+    state: >-
+      {% from 'format_date.jinja' import format_date %}
+      Uso da CPU: {{ states('sensor.dvr_da_casa_uso_do_processador') }}% · 
+      {{- " Último Boot: " + format_date(states('sensor.dvr_da_casa_ultima_inicializacao')) }}

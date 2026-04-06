@@ -1,0 +1,37 @@
+
+triggers:
+  - trigger: state
+    entity_id:
+      - event.eventos_da_lua
+    attribute: event_type
+    to:
+      - Atualizando Eventos Lunares
+
+actions:
+  - action: rest_command.obter_proximos_eventos_da_lua
+    response_variable: action_response
+    data: {}
+
+sensor:
+  - name: "Próximo Nascer da Lua"
+    unique_id: proximo_nascer_da_lua
+    icon: mdi:weather-moonset-up
+    device_class: timestamp
+    state: |
+      {% set moonset = action_response.content.astronomy.moonrise %}
+      {% set moonday = action_response.content.astronomy.date %}
+      {% set hora_dt = strptime(moonday + ' ' + moonset, '%Y-%m-%d %H:%M') | as_local %}
+      {{ hora_dt.isoformat() }}
+
+  - name: "Próximo Pôr da Lua"
+    unique_id: proximo_por_da_lua
+    icon: mdi:weather-moonset-down
+    device_class: timestamp
+    state: |
+      {% set moonset = action_response.content.astronomy.moonset %}
+      {% set moonday = action_response.content.astronomy.date %}
+      {% set hora_dt = strptime(moonday + ' ' + moonset, '%Y-%m-%d %H:%M') | as_local %}
+      {% if int(moonset.split(':')[0]) > 0 %}
+        {% set hora_dt = hora_dt + timedelta( days = 1) %}
+      {% endif %}
+      {{ hora_dt.isoformat() }}

@@ -70,3 +70,21 @@
     data:
       mensagem_de_voz: 'Lembrete: Hora de tomar os remédios.'
   mode: single
+- id: '1775398799554'
+  alias: Alterar o Modo de Funcionamento das Luzes
+  description: ''
+  triggers:
+  - trigger: state
+    entity_id:
+    - select.abajur_cena
+    alias: Quando alterar a cena do Abajur
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    target:
+      entity_id: light.abajur
+    data:
+      effect: Scene
+    alias: Alterar o efeito para "Scene"
+  mode: single

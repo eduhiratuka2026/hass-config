@@ -1,0 +1,6 @@
+
+template lua_imagem: !include ../custom_entities/lua/imagem.yaml
+template lua_nascer_e_por: !include ../custom_entities/lua/nascer_e_por.yaml
+template lua_eventos: !include ../custom_entities/lua/eventos.yaml
+rest_command: !include ../custom_entities/lua/obter_proximos_eventos.yaml
+automation lua_atualizacao: !include ../custom_entities/lua/atualizacao.yaml

@@ -5,9 +5,8 @@ entities:
   - entity: light
     dps:
       - id: 20
-        name: Luz
-        type: boolean
         name: switch
+        type: boolean
       - id: 21
         name: color_mode
         type: string

@@ -1,4 +1,4 @@
-{% macro format_date(date) %}
+{%- macro format_date(date) %}
 	{%- set horario = date | as_datetime %}
 	{%- if horario is none %}
 		{{ none }}
@@ -7,17 +7,17 @@
 		{%- set passado = agora > horario -%}
 		{%- if passado %}
 	        {%- set time = horario | time_since %}
-	      {% else %}
-	      {%- set time = horario | time_until %}
-	      {% endif %}
-	      
-	      {%- if time == "1 day" %}
-	        {{ "Ontem" if passado else "Amanhã" }}
-	      {%- elif time == "1 month" %}
-	        {{ "Mês passado" if passado else "Mês que vem" }}
-	      {%- elif time == "1 year" %}
-	        {{ "Ano passado" if passado else "Ano que vem" }}
 	      {%- else %}
+	      {%- set time = horario | time_until %}
+	      {%- endif %}
+	      
+	      {%- if time == "1 day" -%}
+	        {{ "Ontem" if passado else "Amanhã" }}
+	      {%- elif time == "1 month" -%}
+	        {{ "Mês passado" if passado else "Mês que vem" }}
+	      {%- elif time == "1 year" -%}
+	        {{ "Ano passado" if passado else "Ano que vem" }}
+	      {%- else -%}
 	        {{ "Há " if passado else "Em " }}
 	        {{- time
 	          | replace("second", "segundo")

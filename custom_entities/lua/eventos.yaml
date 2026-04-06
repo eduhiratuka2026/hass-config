@@ -1,0 +1,11 @@
+event:
+  - name: Eventos da Lua
+    unique_id: eventos_da_lua
+    event_type: |
+      {% if is_state_attr('automation.atualizacao_de_eventos_da_lua', 'current', 1) %}
+        Atualizando Eventos Lunares
+      {% else %}
+        Eventos Lunares Atualizado
+      {% endif %}
+    event_types: |
+      {{ ['Atualizando Eventos Lunares', 'Eventos Lunares Atualizado'] }}

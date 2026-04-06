@@ -1,0 +1,16 @@
+
+triggers:
+  - trigger: state
+    entity_id:
+      - event.eventos_da_lua
+    attribute: event_type
+    to:
+      - Atualizando Eventos Lunares
+
+image:
+  - name: "Fase da Lua em Imagem"
+    unique_id: fase_da_lua_em_imagem
+    url: |
+        {% from 'eventos_lunares.jinja' import datePhaseNameandValue %}
+        {% set image_response = datePhaseNameandValue(now()) | from_json %}
+        {{ 'http://192.168.15.150:8123/local/imagens_da_lua/moon-phase-today-big-' + image_response.valphase + '.webp' }}

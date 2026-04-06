@@ -1,0 +1,4 @@
+obter_proximos_eventos_da_lua:
+  url: "https://api.ipgeolocation.io/v2/astronomy?apiKey=7cb9aa50b5214db3b5f582304d8cedb1&lat=-20.84111&long=-49.35772"
+  method: get
+  content_type: "application/json"
