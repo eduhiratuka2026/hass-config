@@ -1,0 +1,8 @@
+triggers:
+  - trigger: state
+    entity_id: sensor.mensagem_para_tts
+
+sensor:
+  - name: "Mensagem para TTS"
+    unique_id: "mensagem_para_tts"
+    state: "{{ '' if trigger.to_state.state == 'unknown' else trigger.to_state.state }}"

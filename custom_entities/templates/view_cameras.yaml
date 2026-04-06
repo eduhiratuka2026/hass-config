@@ -1,0 +1,16 @@
+triggers:
+      - trigger: state
+        entity_id: select.zona_atual_da_view_cameras
+
+select:
+  - name: "Zona Atual da View Cameras"
+    unique_id: "zona_atual_da_view_cameras"
+    optimistic: true
+    options: "{{ ['Casa', 'Chácara'] }}"
+    state: "{{ 'Casa' if trigger.to_state.state == 'unknown' else trigger.to_state.state }}"
+    select_option:
+      - action: select.select_option
+        data:
+          option: "{{ option }}"
+        target:
+          entity_id: select.zona_atual_da_view_cameras

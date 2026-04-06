@@ -1,4 +1,4 @@
-s23_ultra_do_edu_encontrar_dispositivo:
+encontrar_o_s23_ultra_do_edu:
   sequence:
   - action: notify.mobile_app_s23_ultra_do_edu
     data:
@@ -14,13 +14,13 @@ s23_ultra_do_edu_encontrar_dispositivo:
         ttl: 0
         priority: high
         channel: alarm_stream
-  alias: 'S23 Ultra do Edu: Encontrar Dispositivo'
+  alias: Encontrar o S23 Ultra do Edu
   icon: mdi:cellphone-marker
   description: 'Tocar o telefone S23 Ultra do Edu no volume máximo para que possa
     ser encontrado facilmente.
 
     '
-s23_ultra_do_edu_enviar_tts:
+enviar_tts_para_o_s23_ultra_do_edu:
   sequence:
   - if:
     - condition: template
@@ -37,7 +37,7 @@ s23_ultra_do_edu_enviar_tts:
           ttl: 0
           priority: high
         message: TTS
-  alias: 'S23 Ultra do Edu: Enviar TTS'
+  alias: Enviar TTS para o S23 Ultra do Edu
   icon: mdi:cellphone-message
   description: 'Envia uma mensagem de voz que será tocada no S23 Ultra do Edu
 
@@ -51,7 +51,7 @@ s23_ultra_do_edu_enviar_tts:
     campo:
       selector:
         text:
-aplicar_efeito_em_uma_luz:
+aplicar_efeito_no_abajur:
   sequence:
   - variables:
       efeito: '{{ state_attr(''light.abajur'', ''effect'') }}'
@@ -63,5 +63,6 @@ aplicar_efeito_em_uma_luz:
     data:
       effect: '{{ novo_efeito }}'
   fields: {}
-  alias: Aplicar Efeito em uma Luz
+  alias: Aplicar Efeito no Abajur
   description: ''
+  icon: mdi:floor-lamp

@@ -1,10 +1,10 @@
 triggers:
       - trigger: state
-        entity_id: select.tv_do_edu_selecao
+        entity_id: select.selecao_atual_do_card_tv_do_edu
 
 select:
-  - name: "TV do Edu: Seleção"
-    unique_id: "tv_do_edu_selecao"
+  - name: "Seleção Atual do Card TV do Edu"
+    unique_id: "selecao_atual_do_card_tv_do_edu"
     icon: mdi:palette-swatch-variant
     optimistic: true
     options: "{{ ['Volume', 'Fonte'] }}"
@@ -14,4 +14,4 @@ select:
         data:
           option: "{{ option }}"
         target:
-          entity_id: select.tv_do_edu_selecao
+          entity_id: select.selecao_atual_do_card_tv_do_edu

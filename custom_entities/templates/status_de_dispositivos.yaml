@@ -1,37 +1,44 @@
 
 
 sensor:
-  - name: "S23 Ultra do Edu: Status"
-    unique_id: s23_ultra_do_edu_status
-    state: "{{ states('sensor.s23_ultra_do_edu_nivel_da_bateria') }}"
-    icon: "{{ state_attr('sensor.s23_ultra_do_edu_nivel_da_bateria', 'icon') }}"
+  - name: "Status do S23 Ultra do Edu"
+    unique_id: status_do_s23_ultra_do_edu
+    state: "{{ states('sensor.nivel_da_bateria_do_s23_ultra_do_edu') }}"
+    icon: "{{ state_attr('sensor.nivel_da_bateria_do_s23_ultra_do_edu', 'icon') }}"
     device_class: battery
     unit_of_measurement: "%"
     attributes:
       status: >-
-        {% if is_state('sensor.s23_ultra_do_edu_status_da_bateria', 'discharging') -%}
+        {% if is_state('sensor.status_da_bateria_do_s23_ultra_do_edu', 'discharging') -%}
           Em Uso
-        {% elif is_state('sensor.s23_ultra_do_edu_status_da_bateria', 'charging') -%}
+        {% elif is_state('sensor.status_da_bateria_do_s23_ultra_do_edu', 'charging') -%}
           Carregando
-          {%- if is_state('sensor.s23_ultra_do_edu_tipo_de_carregamento', 'ac') -%}
+          {%- if is_state('sensor.tipo_de_carregamento_do_s23_ultra_do_edu', 'ac') -%}
             {{ " - Tomada" }}
-          {% elif is_state('sensor.s23_ultra_do_edu_tipo_de_carregamento', 'usb') -%}
+          {% elif is_state('sensor.tipo_de_carregamento_do_s23_ultra_do_edu', 'usb') -%}
             {{ " - USB" }}
-          {% elif is_state('sensor.s23_ultra_do_edu_tipo_de_carregamento', 'wireless') -%}
+          {% elif is_state('sensor.tipo_de_carregamento_do_s23_ultra_do_edu', 'wireless') -%}
             {{ " - Wireless" }}
-          {% elif is_state('sensor.s23_ultra_do_edu_tipo_de_carregamento', 'dock') -%}
+          {% elif is_state('sensor.tipo_de_carregamento_do_s23_ultra_do_edu', 'dock') -%}
             {{ " - Dock" }}
           {% endif %}
-        {% elif is_state('sensor.s23_ultra_do_edu_status_da_bateria', 'full') -%}
+        {% elif is_state('sensor.status_da_bateria_do_s23_ultra_do_edu', 'full') -%}
           Carga Completa
-        {% elif is_state('sensor.s23_ultra_do_edu_status_da_bateria', 'not_charging') -%}
+        {% elif is_state('sensor.status_da_bateria_do_s23_ultra_do_edu', 'not_charging') -%}
           Not Charging
         {% endif %}
         
-  - name: "DVR da Casa: Status"
-    unique_id: dvr_da_casa_status
+  - name: "Status do DVR da Casa"
+    unique_id: status_do_dvr_da_casa
     icon: mdi:cctv
     state: >-
       {% from 'format_date.jinja' import format_date %}
-      Uso da CPU: {{ states('sensor.dvr_da_casa_uso_do_processador') }}% · 
-      {{- " Último Boot: " + format_date(states('sensor.dvr_da_casa_ultima_inicializacao')) }}
+      Uso da CPU: {{ states('sensor.uso_do_processador_do_dvr_da_casa') }}% · 
+      {{- " Último Boot: " + format_date(states('sensor.ultima_inicializacao_do_dvr_da_casa')) }}
+
+
+
+
+
+
+

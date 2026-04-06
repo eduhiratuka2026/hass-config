@@ -9,7 +9,7 @@
             offset: -00:10:00
     conditions: []
     actions:
-      - action: script.s23_ultra_do_edu_enviar_tts
+      - action: script.enviar_tts_para_o_s23_ultra_do_edu
         metadata: {}
         data:
             mensagem_de_voz: |
